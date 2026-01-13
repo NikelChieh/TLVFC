@@ -22,4 +22,7 @@ __pycache__/
 /wandb/
 /ckpt/
 test.py
-/nbs/
+/nbs/experiments/
+.idea/
+quick_start.py
+data/
