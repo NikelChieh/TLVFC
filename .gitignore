@@ -22,7 +22,6 @@ __pycache__/
 /wandb/
 /ckpt/
 test.py
-/nbs/experiments/
 .idea/
-quick_start.py
 data/
+token.txt

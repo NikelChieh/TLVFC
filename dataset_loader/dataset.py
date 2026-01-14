@@ -1,3 +1,5 @@
+import os.path
+
 from torchvision import transforms, datasets
 from torch.utils.data import Dataset, DataLoader
 from dataset_loader.dataset_utils import split_dataset
@@ -33,7 +35,7 @@ def get_train_valid_loader(dataset_name,
     error_msg = "[!] valid_size should be in the range [0, 1]."
     assert ((valid_size >= 0) and (valid_size <= 1)), error_msg
 
-    with open('./config/dataset.yaml') as f:
+    with open('../config/dataset.yaml') as f:
         config = yaml.load(f, Loader=SafeLoader)
 
     mean = config["dataset_config"][dataset_name]["mean"]
@@ -66,25 +68,27 @@ def get_train_valid_loader(dataset_name,
     ])
 
     if dataset_name == "CIFAR10" or dataset_name == "CIFAR100":
+        dataset_dir = os.path.join(data_dir, dataset_name)
         if dataset_name == "CIFAR10":
             train_dataset = datasets.CIFAR10(
-                root=data_dir, train=True,
+                root=dataset_dir, train=True,
                 download=True, transform=train_transform,
             )
 
             valid_dataset = datasets.CIFAR10(
-                root=data_dir, train=True,
+                root=dataset_dir, train=True,
                 download=True, transform=valid_transform,
             )
         else:
+            print("***** " + dataset_dir)
             train_dataset = datasets.CIFAR100(
-                root=data_dir, train=True,
-                download=True, transform=train_transform,
+                root=dataset_dir, train=True,
+                download=False, transform=train_transform,
             )
 
             valid_dataset = datasets.CIFAR100(
-                root=data_dir, train=True,
-                download=True, transform=valid_transform,
+                root=dataset_dir, train=True,
+                download=False, transform=valid_transform,
             )
 
         train_sampler, val_sampler, _ = split_dataset(
@@ -129,7 +133,7 @@ def get_test_loader(
                     num_workers=1,
                     pin_memory=False):
 
-    with open('./config/dataset.yaml') as f:
+    with open('../config/dataset.yaml') as f:
         config = yaml.load(f, Loader=SafeLoader)
 
     mean = config["dataset_config"][dataset_name]["mean"]
@@ -148,14 +152,15 @@ def get_test_loader(
     ])
 
     if dataset_name == "CIFAR10" or dataset_name == "CIFAR100":
+        dataset_dir = os.path.join(data_dir, dataset_name)
         if dataset_name == "CIFAR10":
             dataset = datasets.CIFAR10(
-                root=data_dir, train=False,
+                root=dataset_dir, train=False,
                 download=True, transform=transform,
             )
         else:
             dataset = datasets.CIFAR100(
-                root=data_dir, train=False,
+                root=dataset_dir, train=False,
                 download=True, transform=transform,
             )
 
